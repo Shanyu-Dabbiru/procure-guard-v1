@@ -1,53 +1,99 @@
-# Autonomous Procurement Guardrail (APG) 🛡️
+# Autonomous Procurement Guardrail (APG)
 
-### **Mission: Eliminating Liability in Autonomous Enterprise Execution**
+### **The Zero-Trust Decision Firewall for Agentic Procurement**
 
-As enterprises transition from "Copilots" to **Autonomous AI Workforces**, the primary bottleneck is **compliance risk**. The APG is a high-performance middleware layer designed for agentic platforms like **Lio**. It intercepts autonomous purchase intents and validates them against complex corporate policies (SOC2, Spend Limits, Vendor Vetting) before any ERP execution occurs.
-
-
+Autonomous AI agents in procurement represent a massive efficiency gain, but they also introduce unprecedented financial and compliance risks. The **Autonomous Procurement Guardrail (APG)** is a production-grade safety layer that intercepts agent purchase intents, validates them against corporate policies, and ensures every transaction is auditable and compliant.
 
 ---
 
-## 🚀 Why This Matters for Lio's $30M Series A
-Lio's **Agent Operating Procedures (AOPs)** require a "Zero-Trust" architecture to scale in the US market. This project solves the **"Rogue Agent"** problem by providing:
-- **Deterministic Compliance:** Moving beyond vague "system prompts" to strict Pydantic-enforced validation.
-- **Audit-Ready Observability:** Full decision-traceability using Pydantic Logfire.
-- **Enterprise Scale:** Distributed policy retrieval using Qdrant vector embeddings.
+## Orchestrating Auditor-Grade Security
+
+Unlike traditional system prompts that are prone to hallucinations, the APG uses a multi-layered, deterministic architecture to ensure **zero-liability** execution.
+
+- **Deterministic Validation**: Crucial decisions (like amount thresholds) are handled by strict Python logic, not the LLM.
+- **Financial Precision**: Every transaction uses `Decimal` arithmetic to prevent floating-point rounding errors.
+- **Hybrid Retrieval**: Powered by Qdrant, we use semantic search combined with hard categorical filtering so no policy is ever missed.
+- **Deep Observability**: Every step is traced with Pydantic Logfire, providing a CFO-ready audit trail for every single purchase.
 
 ---
 
-## 🛠️ The Tech Stack
-- **Orchestration:** [LangGraph](https://github.com/langchain-ai/langgraph) (State-machine for cyclic agent workflows).
-- **Validation:** [Pydantic V2](https://docs.pydantic.dev/) (Strict schema enforcement for "Safe-to-Execute" payloads).
-- **Knowledge Base:** [Qdrant](https://qdrant.tech/) (Semantic retrieval of procurement laws and vendor white-lists).
-- **Observability:** [Pydantic Logfire](https://logfire.pydantic.dev/) (Uncompromising audit trails for CFO/Security reviews).
+## Architectural Deep Dive
+
+The system operates as a **LangGraph State Machine**, moving through four distinct stages:
+
+```mermaid
+graph TD
+    User["User Request"] --> Intent["1. Intent Extraction (The Bouncer)"]
+    Intent --> Retrieval["2. Knowledge Retrieval (The Law Library)"]
+    Retrieval --> Validation["3. Deterministic Validation (The Auditor)"]
+    Validation --> Decision["4. Route Decision (The Traffic Cop)"]
+    Decision --> Logs["Unified Logfire Audit Trace"]
+```
+
+### Modular Components
+- **`schema.py`**: Strict Pydantic V2 definitions for immutability and data integrity.
+- **`vector_db.py`**: Manages the Qdrant knowledge base with in-memory persistence and hybrid search.
+- **`nodes.py`**: Individual operational nodes (LLM intent extraction, Deterministic guardrail matching).
+- **`graph.py`**: The LangGraph orchestration logic including Dead Letter Queue (DLQ) routing for unparseable requests.
+- **`main.py`**: The execution entry point with integrated Logfire tracing.
 
 ---
 
-## 🧠 Architectural Overview
-The system follows a **"Guardrail-First"** design pattern:
-1. **Intent Extraction:** Parsers convert messy Slack/Email inputs into structured Pydantic models.
-2. **Policy Retrieval:** A RAG-based lookup identifies relevant corporate constraints based on the commodity code and amount.
-3. **Multi-Agent Validation:** Specialized LangGraph nodes check for "Split-Ordering" attempts and "Unvetted Vendor" risks.
-4. **ERP Interface:** A high-fidelity mock of a **SAP OData API** for end-to-end transaction testing.
-
-
+## Tech Stack
+- **Engine**: [LangGraph](https://github.com/langchain-ai/langgraph)
+- **Validation**: [Pydantic V2](https://docs.pydantic.dev/)
+- **Vector DB**: [Qdrant](https://qdrant.tech/) 
+- **Embeddings**: OpenAI `text-embedding-3-small`
+- **Observability**: [Pydantic Logfire](https://logfire.pydantic.dev/)
 
 ---
 
-## 🧪 Battle-Tested Logic (Stress Test Cases)
-The system is verified against a custom test suite of common procurement bypass attempts:
-- **The Splitter:** Detecting attempts to break a $5,000 order into two $2,500 orders to bypass VP approval.
-- **The Shadow Vendor:** Flagging urgent requests for non-SOC2 compliant software.
-- **The Obfuscator:** Catching vague commodity descriptions intended to hide personal spend.
+## Getting Started
+
+### 1. Prerequisites
+- Python 3.10+
+- An OpenAI API Key (`OPENAI_API_KEY`)
+- (Optional) A Logfire Token (`LOGFIRE_TOKEN`)
+
+### 2. Installation
+The project uses `uv` for ultra-fast dependency management.
+```bash
+# Set up environment and install dependencies
+uv venv
+source .venv/bin/activate
+uv pip install -e .
+```
+
+### 3. Usage
+Run the end-to-end simulation from the repository root:
+```bash
+python -m src.apg.main "Buy 50 MacBooks from Apple for $100,000 for the new engineering office"
+```
 
 ---
 
-## 🚦 Getting Started
-1. `pip install -r requirements.txt`
-2. `docker-compose up qdrant`
-3. `python ingest_policies.py`
-4. `python run_demo.py --case splitter_attack`
+## Comprehensive Verification
+The APG includes a robust suite of **23 automated tests** ensuring every layer of the firewall is impenetrable.
+
+```bash
+# Run the full test suite
+pytest tests/test_apg.py -v
+```
+
+**Verifications include:**
+- **Financial Logic**: Ensuring amounts over thresholds are correctly flagged.
+- **Security Constraints**: Triggering SOC2 review paths for SaaS vendors handling PII.
+- **Schema Integrity**: Rejecting negative amounts, invalid categories, or malformed data.
+- **Graph Robustness**: Verifying unparseable requests are routed to the DLQ (Dead Letter Queue).
 
 ---
-*Created by Shanyu Dabbiru - 2026 SF AI/Data Engineering Sprint*
+
+## Roadmap to Production
+- [ ] **Hosted Persistence**: Transitioning from Qdrant `:memory:` to Qdrant Cloud.
+- [ ] **External Verifications**: Live API calls to Vanta/Drata for real-time SOC2 status.
+- [ ] **Human-in-the-Loop**: Slack/Email approval workflows for "Exception" paths.
+- [ ] **Identity Management**: Mapping purchases to specific employee budgets and IDs.
+
+---
+*Created as part of the 2026 Autonomous Agent Security Framework*
+

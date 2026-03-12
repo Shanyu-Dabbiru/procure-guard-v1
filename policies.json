@@ -1,0 +1,32 @@
+[
+  {
+    "id": "POL-001",
+    "category": "Hardware",
+    "rule": "All laptop or desktop purchases exceeding $2,500 require VP-level approval.",
+    "exception_path": "Route to Finance-VP-Queue"
+  },
+  {
+    "id": "POL-002",
+    "category": "Software/SaaS",
+    "rule": "Any SaaS vendor handling PII or Customer Data must have a verified SOC2 Type II report on file.",
+    "exception_path": "Trigger Security-Review-Workflow"
+  },
+  {
+    "id": "POL-003",
+    "category": "Vendor Management",
+    "rule": "New vendors must be vetted for 'Sustainability and Ethical Sourcing' if the contract value is >$10k.",
+    "exception_path": "Notify Procurement-Compliance-Team"
+  },
+  {
+    "id": "POL-004",
+    "category": "General Spend",
+    "rule": "Marketing expenses over $500 cannot be charged to personal credit cards; must use a corporate PO.",
+    "exception_path": "Reject-and-Notify-Employee"
+  },
+  {
+    "id": "POL-005",
+    "category": "AI/Cloud",
+    "rule": "GPU compute credits (AWS/GCP/Azure) exceeding $5k/month require CTO-Infrastructure approval.",
+    "exception_path": "Route to Infra-Lead"
+  }
+]
